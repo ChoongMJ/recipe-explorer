@@ -4,11 +4,16 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import API from "../services/api";
+import { useParams } from "next/navigation";
 
-export default function RecipeDetail({ id }: { id: string }) {
+export default function RecipeDetail() {
+
+  const {id} = useParams();
+  
   const { data: recipe, isLoading, isError } = useQuery({
     queryKey: ["recipe", id],
-    queryFn: () => API.getRecipeById(id),
+    queryFn: () => API.getRecipeById(id as string),
+    enabled: !!id,
   });
 
   if (isLoading) {
