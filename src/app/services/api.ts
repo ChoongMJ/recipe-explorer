@@ -63,17 +63,6 @@ const formatRecipe = (meal: RecipeDetailResponse["meals"][0]): Recipe => {
   };
 };
 
-// Add this to your existing API service
-interface FeedbackData {
-  name: string;
-  email: string;
-  recipeId?: string;
-  rating: number;
-  comments: string;
-  improvements: string;
-  subscribe: boolean;
-}
-
 // API service for TheMealDB
 const API = {
   // Get all recipes (only returns basic info)
