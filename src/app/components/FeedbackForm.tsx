@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { FormEvent, useState } from "react";
+import API from "../services/api";
 
 // Add this style element
 const placeholderStyle = `
@@ -40,11 +41,16 @@ export default function FeedbackForm() {
 
   const mutation = useMutation({
     mutationFn: (data: FeedbackData) => {
-      // Simulated API call
-      console.log("Submitting feedback:", data);
-      return new Promise<{ success: boolean }>((resolve) => {
-        setTimeout(() => resolve({ success: true }), 800);
-      });
+      // Use the API service to submit feedback
+      const feedbackForm = {
+        name: data.name,
+        email: data.email,
+        rating: data.rating,
+        comments: data.comments,
+        improvements: data.improvements,
+        subscribe: data.subscribe,
+      }
+      return API.submitFeedback(feedbackForm);
     },
   });
 
@@ -76,6 +82,8 @@ export default function FeedbackForm() {
       improvements: "",
       subscribe: false,
     });
+    // Reset the mutation state
+    mutation.reset();
   };
 
   if (mutation.isSuccess) {

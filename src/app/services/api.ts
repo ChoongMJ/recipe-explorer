@@ -63,6 +63,17 @@ const formatRecipe = (meal: RecipeDetailResponse["meals"][0]): Recipe => {
   };
 };
 
+// Add this to your existing API service
+interface FeedbackData {
+  name: string;
+  email: string;
+  recipeId?: string;
+  rating: number;
+  comments: string;
+  improvements: string;
+  subscribe: boolean;
+}
+
 // API service for TheMealDB
 const API = {
   // Get all recipes (only returns basic info)
@@ -98,9 +109,9 @@ const API = {
   },
 
   // Submit feedback (mocked since the API doesn't have this functionality)
-  submitFeedback: async (recipeId: string, feedback: string): Promise<{ success: boolean }> => {
+  submitFeedback: async (feedbackForm: FeedbackData): Promise<{ success: boolean }> => {
     // This is mocked since the API doesn't support feedback
-    console.log(`Feedback for recipe ${recipeId}: ${feedback}`);
+    console.log(`Feedback for recipe ${feedbackForm.recipeId}: ${JSON.stringify(feedbackForm)}`);
     
     // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 500));
