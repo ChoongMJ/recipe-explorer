@@ -68,8 +68,12 @@ export default function RecipeDetail() {
             <CardTitle className="text-3xl">{recipe?.strMeal ?? ""}</CardTitle>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <Badge variant="secondary">{recipe?.strCategory ?? ""}</Badge>
-              <Badge variant="outline">{recipe?.strArea ?? ""}</Badge>
+              <Badge className="border border-transparent bg-primary/15 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:text-primary dark:hover:bg-primary/30">
+                {recipe?.strCategory ?? ""}
+              </Badge>
+              <Badge className="border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/90">
+                {recipe?.strArea ?? ""}
+              </Badge>
             </div>
 
             <div className="mt-8">

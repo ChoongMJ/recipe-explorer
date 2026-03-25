@@ -36,6 +36,14 @@ interface FeedbackData {
   subscribe: boolean;
 }
 
+const ratingOptions = [
+  { value: "5", label: "5 - Excellent" },
+  { value: "4", label: "4 - Very Good" },
+  { value: "3", label: "3 - Good" },
+  { value: "2", label: "2 - Fair" },
+  { value: "1", label: "1 - Poor" },
+];
+
 export default function FeedbackForm() {
   const [formData, setFormData] = useState<FeedbackData>({
     name: "",
@@ -172,12 +180,13 @@ export default function FeedbackForm() {
               Leave blank if your feedback is about the general application.
             </p>
           </div>
-
           <div>
             <Label htmlFor="rating" className="mb-2 block">
               Overall Rating <span className="text-red-500">*</span>
             </Label>
+            
             <Select
+              items={ratingOptions}
               value={formData.rating}
               onValueChange={(value) =>
                 setFormData((prev) => ({ ...prev, rating: value ?? "5" }))
@@ -187,11 +196,11 @@ export default function FeedbackForm() {
                 <SelectValue placeholder="Select a rating" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="5">5 - Excellent</SelectItem>
-                <SelectItem value="4">4 - Very Good</SelectItem>
-                <SelectItem value="3">3 - Good</SelectItem>
-                <SelectItem value="2">2 - Fair</SelectItem>
-                <SelectItem value="1">1 - Poor</SelectItem>
+                {ratingOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

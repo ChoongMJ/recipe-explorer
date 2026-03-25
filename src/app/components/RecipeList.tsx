@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-const ALL_CATEGORIES_VALUE = "__all__";
+const ALL_CATEGORIES_VALUE = "all";
 
 export default function RecipeList() {
   const [searchTerm, setSearchTerm] = useState("");
