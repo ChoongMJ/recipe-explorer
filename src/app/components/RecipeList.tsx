@@ -48,8 +48,11 @@ export default function RecipeList() {
     isError,
     isFetching,
   } = useQuery({
-    queryKey: ["recipes", debouncedSearchTerm],
-    queryFn: () => API.getRecipes(debouncedSearchTerm),
+    queryKey: ["recipes", debouncedSearchTerm, selectedCategory],
+    queryFn: () =>
+      selectedCategory
+        ? API.getRecipesByCategory(selectedCategory)
+        : API.getRecipes(debouncedSearchTerm),
     placeholderData: (previousData) => previousData,
   });
 
@@ -64,8 +67,10 @@ export default function RecipeList() {
 
   const meals = recipesData?.meals ?? [];
   const categories = categoriesData?.categories ?? [];
-  const filteredMeals = selectedCategory
-    ? meals.filter((recipe) => recipe.strCategory === selectedCategory)
+  const filteredMeals = selectedCategory && debouncedSearchTerm
+    ? meals.filter((recipe) =>
+        recipe.strMeal.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+      )
     : meals;
 
   if (isLoading && !recipesData) {

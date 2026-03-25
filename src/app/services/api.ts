@@ -16,7 +16,6 @@ export interface RecipeListResponse {
     idMeal: string;
     strMeal: string;
     strMealThumb: string;
-    strCategory: string;
   }[] | null;
 }
 
@@ -95,6 +94,18 @@ const API = {
     
     if (!response.ok) {
       throw new Error("Failed to fetch recipes");
+    }
+
+    return response.json();
+  },
+
+  getRecipesByCategory: async (category: string): Promise<RecipeListResponse> => {
+    const response = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(category)}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch recipes by category");
     }
 
     return response.json();
