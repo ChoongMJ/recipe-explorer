@@ -27,14 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <ReactQueryProvider>
           <Navbar />
           <main className="flex-grow">
             {children}
           </main>
-          <footer className="bg-gray-800 text-white py-6">
+          <footer className="bg-footer py-6 text-footer-foreground transition-colors">
             <div className="container mx-auto px-4 text-center">
               <p>Recipe Explorer Lite &copy; {new Date().getFullYear()}</p>
               <p className="text-sm mt-2">Data provided by TheMealDB</p>

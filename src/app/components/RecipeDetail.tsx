@@ -28,7 +28,7 @@ export default function RecipeDetail() {
     return (
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         <p>Error loading recipe. Please try again later.</p>
-        <Link href="/" className="mt-4 inline-block text-primary hover:underline">
+        <Link href="/" className="mt-4 inline-block text-blue-600 hover:underline hover:text-blue-700">
           Back to recipes
         </Link>
       </div>
@@ -37,11 +37,11 @@ export default function RecipeDetail() {
 
   return (
     <div>
-      <Link href="/" className="text-primary hover:underline mb-6 inline-block">
+      <Link href="/" className="mb-6 inline-block text-blue-600 hover:text-blue-700 hover:underline">
         &larr; Back to recipes
       </Link>
       
-      <div className="bg-white rounded-lg shadow-md overflow-hidden text-black">
+      <div className="overflow-hidden rounded-lg border border-border bg-surface text-surface-foreground shadow-md">
         <div className="md:flex">
           <div className="md:w-1/2">
             <div className="relative h-64 md:h-full w-full">
@@ -59,10 +59,10 @@ export default function RecipeDetail() {
             <h1 className="text-3xl font-bold">{recipe?.strMeal ?? ""}</h1>
             
             <div className="flex gap-2 mt-3">
-              <span className="bg-secondary pr-2 py-1 rounded-full text-sm">
+              <span className="rounded-full bg-tag px-3 py-1 text-sm text-tag-foreground">
                 {recipe?.strCategory ?? ""}
               </span>
-              <span className="bg-accent text-gray-800 px-2 py-1 rounded-full text-sm">
+              <span className="rounded-full bg-tag-alt px-3 py-1 text-sm text-tag-alt-foreground">
                 {recipe?.strArea ?? ""}
               </span>
             </div>
@@ -78,7 +78,7 @@ export default function RecipeDetail() {
           </div>
         </div>
         
-        <div className="p-6 border-t">
+        <div className="border-t border-border p-6">
           <h2 className="text-xl font-bold mb-3">Instructions</h2>
           <p className="whitespace-pre-line">{recipe?.strInstructions ?? ""}</p>
           
@@ -89,7 +89,7 @@ export default function RecipeDetail() {
                 href={recipe?.strYoutube ?? ""} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-primary hover:underline"
+                className="text-blue-600 hover:text-blue-700 hover:underline"
               >
                 Watch on YouTube
               </a>

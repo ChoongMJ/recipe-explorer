@@ -7,14 +7,14 @@ import API from "../services/api";
 // Add this style element
 const placeholderStyle = `
   ::placeholder {
-    color: #4B5563; /* darker gray (gray-600) */
+    color: var(--muted-foreground);
     opacity: 1;
   }
   :-ms-input-placeholder {
-    color: #4B5563;
+    color: var(--muted-foreground);
   }
   ::-ms-input-placeholder {
-    color: #4B5563;
+    color: var(--muted-foreground);
   }
 `;
 
@@ -88,7 +88,7 @@ export default function FeedbackForm() {
 
   if (mutation.isSuccess) {
     return (
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+      <div className="mx-auto max-w-2xl rounded-lg border border-border bg-surface p-8 text-surface-foreground shadow-md">
         <div className="text-center">
           <svg
             className="w-16 h-16 text-green-500 mx-auto mb-4"
@@ -104,13 +104,13 @@ export default function FeedbackForm() {
               d="M5 13l4 4L19 7"
             ></path>
           </svg>
-          <h2 className="text-2xl font-bold mb-4 text-black">Thank You For Your Feedback!</h2>
-          <p className="mb-6 text-gray-600">
+          <h2 className="mb-4 text-2xl font-bold">Thank You For Your Feedback!</h2>
+          <p className="mb-6 text-muted-foreground">
             We appreciate your input and will use it to improve our service.
           </p>
           <button
             onClick={resetForm}
-            className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors shadow-md"
+            className="rounded-md bg-button px-6 py-2 text-button-foreground shadow-md transition-colors hover:bg-button-hover"
           >
             Submit Another Response
           </button>
@@ -120,18 +120,18 @@ export default function FeedbackForm() {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+    <div className="mx-auto max-w-2xl rounded-lg border border-border bg-surface p-6 text-surface-foreground shadow-md">
       <style>{placeholderStyle}</style>
       {mutation.isError && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          <p className="text-black">Error submitting feedback. Please try again.</p>
+          <p>Error submitting feedback. Please try again.</p>
         </div>
       )}
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="name" className="block text-gray-700 mb-2 font-medium">
+            <label htmlFor="name" className="mb-2 block font-medium text-muted-foreground">
               Your Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -141,12 +141,12 @@ export default function FeedbackForm() {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600"
+              className="w-full rounded-md border border-input-border bg-input px-3 py-2 text-input-foreground outline-none transition focus:border-input-focus focus:ring-2 focus:ring-ring"
             />
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-gray-700 mb-2 font-medium">
+            <label htmlFor="email" className="mb-2 block font-medium text-muted-foreground">
               Email Address <span className="text-red-500">*</span>
             </label>
             <input
@@ -156,13 +156,13 @@ export default function FeedbackForm() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600"
+              className="w-full rounded-md border border-input-border bg-input px-3 py-2 text-input-foreground outline-none transition focus:border-input-focus focus:ring-2 focus:ring-ring"
             />
           </div>
         </div>
         
         <div>
-          <label htmlFor="recipeId" className="block text-gray-700 mb-2 font-medium">
+          <label htmlFor="recipeId" className="mb-2 block font-medium text-muted-foreground">
             Recipe ID (if applicable)
           </label>
           <input
@@ -172,13 +172,13 @@ export default function FeedbackForm() {
             value={formData.recipeId}
             onChange={handleChange}
             placeholder="e.g., 52772"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 text-black"
+            className="w-full rounded-md border border-input-border bg-input px-3 py-2 text-input-foreground outline-none transition focus:border-input-focus focus:ring-2 focus:ring-ring"
           />
-          <p className="text-sm text-gray-500 mt-1">Leave blank if your feedback is about the general application</p>
+          <p className="mt-1 text-sm text-muted-foreground">Leave blank if your feedback is about the general application</p>
         </div>
         
         <div>
-          <label htmlFor="rating" className="block text-gray-700 mb-2 font-medium">
+          <label htmlFor="rating" className="mb-2 block font-medium text-muted-foreground">
             Overall Rating <span className="text-red-500">*</span>
           </label>
           <select
@@ -187,7 +187,7 @@ export default function FeedbackForm() {
             value={formData.rating}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-black placeholder-gray-600"
+            className="w-full rounded-md border border-input-border bg-input px-3 py-2 text-input-foreground outline-none transition focus:border-input-focus focus:ring-2 focus:ring-ring"
           >
             <option value="5">5 - Excellent</option>
             <option value="4">4 - Very Good</option>
@@ -198,7 +198,7 @@ export default function FeedbackForm() {
         </div>
         
         <div>
-          <label htmlFor="comments" className="block text-gray-700 mb-2 font-medium">
+          <label htmlFor="comments" className="mb-2 block font-medium text-muted-foreground">
             Comments <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -209,12 +209,12 @@ export default function FeedbackForm() {
             required
             rows={4}
             placeholder="What did you like about the recipes or application?"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 text-black"
+            className="w-full rounded-md border border-input-border bg-input px-3 py-2 text-input-foreground outline-none transition focus:border-input-focus focus:ring-2 focus:ring-ring"
           />
         </div>
         
         <div>
-          <label htmlFor="improvements" className="block text-gray-700 mb-2 font-medium">
+          <label htmlFor="improvements" className="mb-2 block font-medium text-muted-foreground">
             Suggested Improvements
           </label>
           <textarea
@@ -224,7 +224,7 @@ export default function FeedbackForm() {
             onChange={handleChange}
             rows={3}
             placeholder="How can we make this application better?"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-600 text-black"
+            className="w-full rounded-md border border-input-border bg-input px-3 py-2 text-input-foreground outline-none transition focus:border-input-focus focus:ring-2 focus:ring-ring"
           />
         </div>
         
@@ -235,9 +235,9 @@ export default function FeedbackForm() {
             name="subscribe"
             checked={formData.subscribe}
             onChange={handleChange}
-            className="h-4 w-4 text-primary border-gray-300 rounded placeholder-gray-600"
+            className="h-4 w-4 rounded border-input-border bg-input text-foreground"
           />
-          <label htmlFor="subscribe" className="ml-2 block text-gray-700">
+          <label htmlFor="subscribe" className="ml-2 block text-muted-foreground">
             Subscribe to receive updates on new recipes
           </label>
         </div>
@@ -246,7 +246,7 @@ export default function FeedbackForm() {
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="w-full bg-blue-700 text-white py-3 px-4 rounded-md hover:bg-blue-800 transition-colors disabled:opacity-50 font-medium shadow-md"
+            className="w-full rounded-md bg-button px-4 py-3 font-medium text-button-foreground shadow-md transition-colors hover:bg-button-hover disabled:opacity-50"
           >
             {mutation.isPending ? "Submitting..." : "Submit Feedback"}
           </button>

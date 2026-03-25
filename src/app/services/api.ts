@@ -16,6 +16,16 @@ export interface RecipeListResponse {
     idMeal: string;
     strMeal: string;
     strMealThumb: string;
+    strCategory: string;
+  }[] | null;
+}
+
+export interface CategoryListResponse {
+  categories: {
+    idCategory: string;
+    strCategory: string;
+    strCategoryThumb: string;
+    strCategoryDescription: string;
   }[];
 }
 
@@ -77,15 +87,29 @@ interface FeedbackData {
 // API service for TheMealDB
 const API = {
   // Get all recipes (only returns basic info)
-  getRecipes: async (): Promise<RecipeListResponse> => {
+  getRecipes: async (searchTerm = ""): Promise<RecipeListResponse> => {
+    const trimmedSearch = searchTerm.trim();
     const response = await fetch(
-      "https://www.themealdb.com/api/json/v1/1/search.php?s="
+      `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(trimmedSearch)}`
     );
     
     if (!response.ok) {
       throw new Error("Failed to fetch recipes");
     }
-    
+
+    return response.json();
+  },
+
+  // Get all available recipe categories
+  getCategories: async (): Promise<CategoryListResponse> => {
+    const response = await fetch(
+      "https://www.themealdb.com/api/json/v1/1/categories.php"
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch categories");
+    }
+
     return response.json();
   },
 
