@@ -2,149 +2,123 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { MenuIcon, MoonStarIcon, SunIcon } from "lucide-react";
 
-type ThemeMode = "light" | "dark";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
+
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/feedback", label: "Feedback" },
+];
+
+function ThemeSwitch({
+  checked,
+  onCheckedChange,
+  className,
+}: {
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  className?: string;
+}) {
+  return (
+    <div className={cn("inline-flex items-center gap-3", className)}>
+      <SunIcon className="size-4 text-muted-foreground" />
+      <Switch
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        aria-label={`Switch to ${checked ? "light" : "dark"} theme`}
+      />
+      <MoonStarIcon className="size-4 text-muted-foreground" />
+    </div>
+  );
+}
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<ThemeMode>("light");
-  const isDarkTheme = theme === "dark";
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem("theme-mode");
-    const nextTheme: ThemeMode = savedTheme === "dark" ? "dark" : "light";
-
-    setTheme(nextTheme);
-    document.documentElement.dataset.theme = nextTheme;
+    setIsDarkTheme(document.documentElement.classList.contains("dark"));
   }, []);
 
-  const toggleTheme = () => {
-    const nextTheme: ThemeMode = theme === "light" ? "dark" : "light";
-
-    setTheme(nextTheme);
-    document.documentElement.dataset.theme = nextTheme;
-    window.localStorage.setItem("theme-mode", nextTheme);
+  const handleThemeChange = (checked: boolean) => {
+    setIsDarkTheme(checked);
+    document.documentElement.classList.toggle("dark", checked);
+    window.localStorage.setItem("theme-mode", checked ? "dark" : "light");
   };
 
   return (
-    <nav className="border-b border-border bg-nav text-nav-foreground transition-colors">
-      <div className="container m-auto px-4">
-        <div className="flex justify-between items-center py-4">
-          <Link href="/" className="font-bold text-xl">Recipe Explorer Lite</Link>
+    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+      <div className="container mx-auto flex items-center justify-between px-4 py-4">
+        <Link href="/" className="text-xl font-semibold tracking-tight">
+          Recipe Explorer Lite
+        </Link>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="md:hidden inline-flex items-center gap-3 text-sm font-medium"
-              aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
-              aria-pressed={isDarkTheme}
+        <div className="hidden items-center gap-3 md:flex">
+          <ThemeSwitch checked={isDarkTheme} onCheckedChange={handleThemeChange} />
+          <Separator orientation="vertical" className="h-5" />
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={buttonVariants({ variant: "ghost", size: "sm" })}
             >
-              <span>{isDarkTheme ? "Dark" : "Light"}</span>
-              <span
-                className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors ${
-                  isDarkTheme
-                    ? "border-button bg-button"
-                    : "border-border bg-surface"
-                }`}
-              >
-                <span
-                  className={`inline-block h-5 w-5 rounded-full transition-transform ${
-                    isDarkTheme
-                      ? "translate-x-6 bg-button-foreground"
-                      : "translate-x-1 bg-foreground"
-                  }`}
-                />
-              </span>
-            </button>
-
-            {/* Mobile menu button */}
-            <button 
-              className="md:hidden p-2"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="h-6 w-6"
-              >
-                {isMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
-          
-          {/* Desktop menu */}
-          <div className="hidden md:flex items-center gap-6">
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="inline-flex items-center gap-3 text-sm font-medium"
-              aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
-              aria-pressed={isDarkTheme}
-            >
-              <span>{isDarkTheme ? "Dark" : "Light"}</span>
-              <span
-                className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors ${
-                  isDarkTheme
-                    ? "border-button bg-button"
-                    : "border-border bg-surface"
-                }`}
-              >
-                <span
-                  className={`inline-block h-5 w-5 rounded-full transition-transform ${
-                    isDarkTheme
-                      ? "translate-x-6 bg-button-foreground"
-                      : "translate-x-1 bg-foreground"
-                  }`}
-                />
-              </span>
-            </button>
-            <Link href="/" className="transition-colors hover:text-nav-hover">
-              Home
+              {item.label}
             </Link>
-            <Link href="/feedback" className="transition-colors hover:text-nav-hover">
-              Feedback
-            </Link>
-          </div>
+          ))}
         </div>
-        
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden py-3 border-t border-current/20">
-            <Link 
-              href="/" 
-              className="block p-2"
-              onClick={() => setIsMenuOpen(false)}
+
+        <div className="flex items-center gap-3 md:hidden">
+          <ThemeSwitch checked={isDarkTheme} onCheckedChange={handleThemeChange} />
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger
+              render={
+                <button
+                  type="button"
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "icon-sm" }),
+                    "rounded-lg"
+                  )}
+                  aria-label="Open navigation menu"
+                />
+              }
             >
-              Home
-            </Link>
-            <Link 
-              href="/feedback" 
-              className="block p-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Feedback
-            </Link>
-          </div>
-        )}
+              <MenuIcon className="size-4" />
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px]">
+              <SheetHeader>
+                <SheetTitle>Navigation</SheetTitle>
+                <SheetDescription>
+                  Browse recipes and share your feedback.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="flex flex-col gap-2 px-4 pb-4">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={buttonVariants({ variant: "ghost", size: "lg" })}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </nav>
   );
-} 
+}

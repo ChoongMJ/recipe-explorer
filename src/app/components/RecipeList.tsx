@@ -4,7 +4,30 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { LoaderCircleIcon, SearchIcon } from "lucide-react";
+
 import API from "../services/api";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+
+const ALL_CATEGORIES_VALUE = "__all__";
 
 export default function RecipeList() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,23 +70,26 @@ export default function RecipeList() {
 
   if (isLoading && !recipesData) {
     return (
-      <div className="flex justify-center items-center py-16">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center py-16">
+        <LoaderCircleIcon className="size-8 animate-spin text-primary" />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        <p>Error loading recipes. Please try again later.</p>
-      </div>
+      <Alert variant="destructive" className="mb-6">
+        <AlertTitle>Unable to load recipes</AlertTitle>
+        <AlertDescription>
+          Please try again in a moment.
+        </AlertDescription>
+      </Alert>
     );
   }
 
   return (
     <div>
-      <div className="mb-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)_minmax(0,260px)] lg:items-end">
+      <div className="mb-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,280px)_minmax(0,220px)_auto] lg:items-end">
         <div>
           <h2 className="text-2xl font-bold">All Recipes</h2>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -72,38 +98,60 @@ export default function RecipeList() {
         </div>
 
         <div className="w-full">
-          <label htmlFor="recipe-search" className="mb-2 block text-sm font-medium text-muted-foreground">
+          <Label htmlFor="recipe-search" className="mb-2 block">
             Search recipes
-          </label>
-          <input
-            id="recipe-search"
-            type="search"
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            placeholder="Try chicken, pasta, curry..."
-            className="w-full rounded-lg border border-input-border bg-input px-4 py-3 text-input-foreground shadow-sm outline-none transition focus:border-input-focus focus:ring-2 focus:ring-ring"
-          />
+          </Label>
+          <div className="relative">
+            <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="recipe-search"
+              type="search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Try chicken, pasta, curry..."
+              className="pl-9"
+            />
+          </div>
         </div>
 
         <div className="w-full">
-          <label htmlFor="recipe-category" className="mb-2 block text-sm font-medium text-muted-foreground">
+          <Label htmlFor="recipe-category" className="mb-2 block">
             Filter by category
-          </label>
-          <select
-            id="recipe-category"
-            value={selectedCategory}
-            onChange={(event) => setSelectedCategory(event.target.value)}
-            className="w-full rounded-lg border border-input-border bg-input px-4 py-3 text-input-foreground shadow-sm outline-none transition focus:border-input-focus focus:ring-2 focus:ring-ring"
+          </Label>
+          <Select
+            value={selectedCategory || ALL_CATEGORIES_VALUE}
+            onValueChange={(value) =>
+              setSelectedCategory(value === ALL_CATEGORIES_VALUE ? "" : value ?? "")
+            }
             disabled={isCategoriesLoading || isCategoriesError}
           >
-            <option value="">All categories</option>
-            {categories.map((category) => (
-              <option key={category.idCategory} value={category.strCategory}>
-                {category.strCategory}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger id="recipe-category" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_CATEGORIES_VALUE}>All categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.idCategory} value={category.strCategory}>
+                  {category.strCategory}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setSearchTerm("");
+            setSelectedCategory("");
+          }}
+          className={cn(
+            buttonVariants({ variant: "outline", size: "lg" }),
+            "w-full lg:w-auto"
+          )}
+        >
+          Clear filters
+        </button>
       </div>
 
       <p className="mb-6 min-h-5 text-sm text-muted-foreground">
@@ -113,41 +161,51 @@ export default function RecipeList() {
       </p>
 
       {isCategoriesError && (
-        <div className="mb-6 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-amber-800">
-          <p>Categories could not be loaded, but recipe search is still available.</p>
-        </div>
+        <Alert className="mb-6">
+          <AlertTitle>Categories unavailable</AlertTitle>
+          <AlertDescription>
+            Category filtering is temporarily unavailable, but recipe search still works.
+          </AlertDescription>
+        </Alert>
       )}
 
       {filteredMeals.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-border bg-surface px-6 py-12 text-center text-muted-foreground">
-          <p className="text-lg font-semibold text-surface-foreground">No recipes found</p>
-          <p className="mt-2">
-            Try a different keyword, switch category, or clear the filters to see more recipes.
-          </p>
-        </div>
+        <Card className="border-dashed py-10 text-center">
+          <CardHeader>
+            <CardTitle>No recipes found</CardTitle>
+            <CardDescription>
+              Try a different keyword, switch category, or clear the filters to see more recipes.
+            </CardDescription>
+          </CardHeader>
+        </Card>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredMeals.map((recipe) => (
-          <Link href={`/recipe/${recipe.idMeal}`} key={recipe.idMeal}>
-            <div className="overflow-hidden rounded-lg border border-border bg-surface text-surface-foreground shadow-md transition-shadow duration-300 hover:shadow-lg">
-              <div className="relative h-48 w-full">
-                <Image
-                  src={recipe.strMealThumb}
-                  alt={recipe.strMeal}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="truncate text-lg font-bold">{recipe.strMeal}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Click to view details</p>
-              </div>
-            </div>
-          </Link>
+            <Link href={`/recipe/${recipe.idMeal}`} key={recipe.idMeal}>
+              <Card className="overflow-hidden py-0 transition-shadow duration-300 hover:shadow-lg">
+                <div className="relative h-48 w-full">
+                  <Image
+                    src={recipe.strMealThumb}
+                    alt={recipe.strMeal}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover"
+                  />
+                </div>
+                <CardHeader className="gap-1">
+                  <CardTitle className="truncate">{recipe.strMeal}</CardTitle>
+                  <CardDescription>Click to view details</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-muted-foreground">
+                    Explore ingredients, instructions, and related recipe details.
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       )}
     </div>
   );
-} 
+}
