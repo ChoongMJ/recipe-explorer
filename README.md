@@ -1,4 +1,4 @@
-# Recipe Explorer Lite
+# Recipe Explorer (Next.js)
 
 A lightweight recipe browser built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, and TanStack Query. The app lets users search meals from TheMealDB, filter by category, inspect full recipe details, and submit UI-only feedback through a mock form flow.
 
