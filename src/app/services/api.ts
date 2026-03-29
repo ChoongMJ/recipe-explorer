@@ -1,22 +1,21 @@
 // TheMealDB API types
-export interface Recipe {
+export interface RecipeSummary {
   idMeal: string;
   strMeal: string;
+  strMealThumb: string;
+}
+
+export interface Recipe extends RecipeSummary {
   strCategory: string;
   strArea: string;
   strInstructions: string;
-  strMealThumb: string;
   strTags: string;
   strYoutube: string;
   ingredients: { ingredient: string; measure: string }[];
 }
 
 export interface RecipeListResponse {
-  meals: {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-  }[] | null;
+  meals: RecipeSummary[] | null;
 }
 
 export interface CategoryListResponse {

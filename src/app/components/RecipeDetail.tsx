@@ -15,6 +15,8 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
+import FavoriteButton from "./FavoriteButton";
+
 function RecipeDetailSkeleton() {
   return (
     <div>
@@ -118,7 +120,11 @@ export default function RecipeDetail() {
           </div>
 
           <CardContent className="p-6">
-            <CardTitle className="text-3xl">{recipe?.strMeal ?? ""}</CardTitle>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <CardTitle className="text-3xl">{recipe?.strMeal ?? ""}</CardTitle>
+
+              {recipe && <FavoriteButton recipe={recipe} showLabel />}
+            </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
               <Badge className="border border-transparent bg-primary/15 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:text-primary dark:hover:bg-primary/30">

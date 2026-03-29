@@ -7,6 +7,7 @@ A lightweight recipe browser built with Next.js 16, React 19, TypeScript, Tailwi
 - Browse recipes from TheMealDB API
 - Search recipes by name with a debounced input
 - Filter recipes by category
+- Save favorite recipes to local storage for this device
 - View recipe details, ingredients, instructions, and YouTube tutorial links
 - Use responsive navigation with a mobile sheet menu
 - Toggle between light and dark themes
@@ -80,6 +81,7 @@ public/              Static assets
 - TanStack Query handles client-side fetching, caching, loading states, and error states
 - Recipe search uses a debounced input to avoid firing a request on every keystroke
 - Category filtering is fetched separately, then combined with search results in the UI
+- Favorite recipes are stored in browser local storage and surfaced on the home page
 
 ## Configuration
 

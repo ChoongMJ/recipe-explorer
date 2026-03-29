@@ -28,6 +28,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
+import FavoriteButton from "./FavoriteButton";
+
 const ALL_CATEGORIES_VALUE = "all";
 
 function RecipeListSkeleton() {
@@ -230,9 +232,16 @@ export default function RecipeList() {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredMeals.map((recipe) => (
-            <Link href={`/recipe/${recipe.idMeal}`} key={recipe.idMeal}>
-              <Card className="overflow-hidden py-0 transition-shadow duration-300 hover:shadow-lg">
+            <Card
+              key={recipe.idMeal}
+              className="overflow-hidden py-0 transition-shadow duration-300 hover:shadow-lg"
+            >
                 <div className="relative h-48 w-full">
+                  <Link
+                    href={`/recipe/${recipe.idMeal}`}
+                    className="absolute inset-0 z-10"
+                    aria-label={`View ${recipe.strMeal}`}
+                  />
                   <Image
                     src={recipe.strMealThumb}
                     alt={recipe.strMeal}
@@ -240,18 +249,28 @@ export default function RecipeList() {
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover"
                   />
+                  <FavoriteButton
+                    recipe={recipe}
+                    className="absolute right-3 top-3 z-20"
+                  />
                 </div>
                 <CardHeader className="gap-1">
-                  <CardTitle className="truncate">{recipe.strMeal}</CardTitle>
+                  <CardTitle className="truncate">
+                    <Link href={`/recipe/${recipe.idMeal}`} className="hover:underline">
+                      {recipe.strMeal}
+                    </Link>
+                  </CardTitle>
                   <CardDescription>Click to view details</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="text-sm text-muted-foreground">
+                  <Link
+                    href={`/recipe/${recipe.idMeal}`}
+                    className="text-sm text-muted-foreground hover:text-foreground"
+                  >
                     Explore ingredients, instructions, and related recipe details.
-                  </p>
+                  </Link>
                 </CardContent>
-              </Card>
-            </Link>
+            </Card>
           ))}
         </div>
       )}
