@@ -1,75 +1,111 @@
 # Recipe Explorer Lite
 
-A lightweight recipe browsing application built with Next.js 15, TypeScript, Tailwind CSS, and React Query.
+A lightweight recipe browser built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, and TanStack Query. The app lets users search meals from TheMealDB, filter by category, inspect full recipe details, and submit UI-only feedback through a mock form flow.
 
-## Features
+## Highlights
 
-- Browse a list of recipes from TheMealDB API
-- View detailed recipe information including ingredients and instructions
-- Submit feedback on recipes
-- Responsive design for all device sizes
+- Browse recipes from TheMealDB API
+- Search recipes by name with a debounced input
+- Filter recipes by category
+- View recipe details, ingredients, instructions, and YouTube tutorial links
+- Use responsive navigation with a mobile sheet menu
+- Toggle between light and dark themes
+- See loading skeletons and friendly error states across the main flows
+- Submit feedback through a mocked client-side form experience
 
 ## Tech Stack
 
-- Next.js 16 with App Router
+- Next.js 16 App Router
+- React 19
 - TypeScript
-- Tailwind CSS for styling
-- TanStack Query (React Query) for data fetching and caching
+- Tailwind CSS v4
+- TanStack Query v5
+- shadcn/ui primitives and Lucide icons
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18.0.0 or later
-- npm or yarn
+- Node.js 20.9 or later
+- npm
 
 ### Installation
 
-1. Clone the repository
 ```bash
-git clone https://github.com/your-username/recipe-explorer.git
-cd recipe-explorer
-```
-
-2. Install dependencies
-```bash
+git clone https://github.com/ChoongMJ/recipe-explorer-nextjs.git
+cd recipe-explorer-nextjs
 npm install
-# or
-yarn install
 ```
 
-3. Run the development server
+### Run Locally
+
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
+
+## Available Scripts
+
+```bash
+npm run dev
+npm run build
+npm run start
+```
+
+## Routes
+
+- `/` shows the searchable, filterable recipe list
+- `/recipe/[id]` shows a single recipe detail view
+- `/feedback` shows the feedback form
 
 ## Project Structure
 
-- `src/app`: Main application code (Next.js App Router)
-  - `components`: Reusable UI components
-  - `services`: API services and utilities
-  - `recipe/[id]`: Recipe detail page route
-- `public`: Static assets
+```text
+src/
+  app/
+    components/      App-specific UI like RecipeList, RecipeDetail, Navbar
+    feedback/        Feedback page route
+    recipe/[id]/     Dynamic recipe detail route
+    services/        API helpers for TheMealDB and feedback submission
+    providers.tsx    React Query provider
+  components/ui/     Shared shadcn/ui primitives
+  lib/               Shared utilities
+public/              Static assets
+```
 
-## Data Fetching Approach
+## Data and State
 
-This application uses React Query to fetch and manage data from TheMealDB API. The main benefits of this approach:
+- Recipe data comes from [TheMealDB](https://www.themealdb.com/)
+- TanStack Query handles client-side fetching, caching, loading states, and error states
+- Recipe search uses a debounced input to avoid firing a request on every keystroke
+- Category filtering is fetched separately, then combined with search results in the UI
 
-- Automatic caching and refetching
-- Loading and error states management
-- Server-side and client-side data fetching support
-- Optimistic updates for mutations
+## Configuration
+
+No environment variables are required right now.
+
+The app calls TheMealDB directly from the client and allows remote images from `www.themealdb.com` through the Next.js image configuration.
+
+## Current Scope and Limitations
+
+- The feedback form is mocked and does not persist data to a backend
+- The app currently depends on TheMealDB being available
+- Production builds need internet access to fetch the Google-hosted Geist fonts used by `next/font`
+
+## Troubleshooting
+
+- If images do not load, confirm that external image loading from TheMealDB is still allowed in `next.config.ts`
+- If `npm run build` fails in an offline or restricted environment, the font download step is the likely cause
+- The existing `npm run lint` script is not documented here because it currently needs updating for this project setup
 
 ## Deployment
 
-This application can be easily deployed to Vercel:
+This project can be deployed on Vercel or any platform that supports Next.js 16.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/your-username/recipe-explorer)
+Repository:
+<https://github.com/ChoongMJ/recipe-explorer-nextjs>
 
 ## License
 
-MIT
+This repository does not currently include a license file. Add one before publishing or reusing the project under a specific license.
