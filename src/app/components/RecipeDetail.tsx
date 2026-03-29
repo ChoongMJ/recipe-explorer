@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeftIcon, ExternalLinkIcon, LoaderCircleIcon } from "lucide-react";
+import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
 
 import API from "../services/api";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -12,7 +12,64 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+
+function RecipeDetailSkeleton() {
+  return (
+    <div>
+      <Skeleton className="mb-6 h-8 w-32 rounded-lg" />
+
+      <Card className="overflow-hidden py-0">
+        <div className="md:grid md:grid-cols-2">
+          <Skeleton className="h-64 w-full rounded-none md:h-full" />
+
+          <CardContent className="p-6">
+            <Skeleton className="h-10 w-3/4" />
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Skeleton className="h-7 w-24 rounded-full" />
+              <Skeleton className="h-7 w-28 rounded-full" />
+            </div>
+
+            <div className="mt-8">
+              <Skeleton className="mb-3 h-7 w-32" />
+              <div className="space-y-3">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <Skeleton className="mt-1 h-2 w-2 rounded-full" />
+                    <Skeleton className="h-4 w-full" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </div>
+
+        <Separator />
+
+        <CardContent className="space-y-6 p-6">
+          <div>
+            <Skeleton className="mb-3 h-7 w-32" />
+            <div className="space-y-3">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className={cn("h-4", index === 4 ? "w-4/5" : "w-full")}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Skeleton className="mb-3 h-7 w-32" />
+            <Skeleton className="h-9 w-40 rounded-lg" />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
 export default function RecipeDetail() {
   const { id } = useParams();
@@ -24,11 +81,7 @@ export default function RecipeDetail() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <LoaderCircleIcon className="size-8 animate-spin text-primary" />
-      </div>
-    );
+    return <RecipeDetailSkeleton />;
   }
 
   if (isError) {

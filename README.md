@@ -11,7 +11,7 @@ A lightweight recipe browsing application built with Next.js 15, TypeScript, Tai
 
 ## Tech Stack
 
-- Next.js 15 with App Router
+- Next.js 16 with App Router
 - TypeScript
 - Tailwind CSS for styling
 - TanStack Query (React Query) for data fetching and caching

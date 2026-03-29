@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { LoaderCircleIcon, SearchIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 
 import API from "../services/api";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -25,9 +25,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 const ALL_CATEGORIES_VALUE = "all";
+
+function RecipeListSkeleton() {
+  return (
+    <div>
+      <div className="mb-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,280px)_minmax(0,220px)_auto] lg:items-end">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-4 w-72 max-w-full" />
+        </div>
+
+        <div className="w-full space-y-2">
+          <Skeleton className="h-4 w-28" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+        </div>
+
+        <div className="w-full space-y-2">
+          <Skeleton className="h-4 w-28" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+        </div>
+
+        <Skeleton className="h-9 w-full rounded-lg lg:w-28" />
+      </div>
+
+      <Skeleton className="mb-6 h-4 w-44" />
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Card key={index} className="overflow-hidden py-0">
+            <Skeleton className="h-48 w-full rounded-none" />
+            <CardHeader className="gap-2">
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-28" />
+            </CardHeader>
+            <CardContent className="space-y-2 pt-0">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function RecipeList() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -74,11 +118,7 @@ export default function RecipeList() {
     : meals;
 
   if (isLoading && !recipesData) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <LoaderCircleIcon className="size-8 animate-spin text-primary" />
-      </div>
-    );
+    return <RecipeListSkeleton />;
   }
 
   if (isError) {
@@ -123,25 +163,29 @@ export default function RecipeList() {
           <Label htmlFor="recipe-category" className="mb-2 block">
             Filter by category
           </Label>
-          <Select
-            value={selectedCategory || ALL_CATEGORIES_VALUE}
-            onValueChange={(value) =>
-              setSelectedCategory(value === ALL_CATEGORIES_VALUE ? "" : value ?? "")
-            }
-            disabled={isCategoriesLoading || isCategoriesError}
-          >
-            <SelectTrigger id="recipe-category" className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ALL_CATEGORIES_VALUE}>All categories</SelectItem>
-              {categories.map((category) => (
-                <SelectItem key={category.idCategory} value={category.strCategory}>
-                  {category.strCategory}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {isCategoriesLoading ? (
+            <Skeleton className="h-10 w-full rounded-lg" />
+          ) : (
+            <Select
+              value={selectedCategory || ALL_CATEGORIES_VALUE}
+              onValueChange={(value) =>
+                setSelectedCategory(value === ALL_CATEGORIES_VALUE ? "" : value ?? "")
+              }
+              disabled={isCategoriesError}
+            >
+              <SelectTrigger id="recipe-category" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ALL_CATEGORIES_VALUE}>All categories</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.idCategory} value={category.strCategory}>
+                    {category.strCategory}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
 
         <button
